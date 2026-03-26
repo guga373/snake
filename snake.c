@@ -162,32 +162,68 @@ void draw_border(){
     for(int i=0;i<=mapWidth;i++){
 
         gotoxy(i,TOP_OFFSET);
-        printf("#");
+        printf("=");
 
         gotoxy(i,mapHeight+TOP_OFFSET);
-        printf("#");
+        printf("=");
     }
 
     for(int i=TOP_OFFSET;i<=mapHeight+TOP_OFFSET;i++){
 
         gotoxy(0,i);
-        printf("#");
+        printf("|");
 
         gotoxy(mapWidth,i);
-        printf("#");
+        printf("|");
     }
 
     setColor(7);
 }
 
-void draw_score(){
-
+void draw_score() {
+    // Score no topo (opcional, já que teremos na lateral)
     setColor(10);
-
-    gotoxy(2,0);
-    printf("Score: %d | Fase: %d        ",score,level);
-
+    gotoxy(2, 0);
+    printf("Score: %d | Fase: %d          ", score, level);
+    
+    // Desenha a barra lateral
+    draw_sidebar();
     setColor(7);
+}
+
+void draw_sidebar() {
+    int sideX = mapWidth + 5; // Posiciona 5 espaços após a borda direita
+    int startY = TOP_OFFSET;
+
+    setColor(11); // Ciano para o cabeçalho
+    gotoxy(sideX, startY);
+    printf("======= STATUS =======");
+
+    setColor(15); // Branco
+    gotoxy(sideX, startY + 2);
+    printf("MODO: ");
+    if(gameMode == MODE_EASY)   { setColor(10); printf("FACIL  "); }
+    if(gameMode == MODE_NORMAL) { setColor(14); printf("NORMAL "); }
+    if(gameMode == MODE_HARD)   { setColor(12); printf("DIFICIL"); }
+
+    setColor(15);
+    gotoxy(sideX, startY + 4);
+    printf("DIFICULDADE: %dms", speed);
+
+    setColor(15);
+    gotoxy(sideX, startY + 6);
+    printf("SCORE ATUAL: ");
+    setColor(10); // Verde para o score
+    printf("%06d", score);
+
+    setColor(11);
+    gotoxy(sideX, startY + 8);
+    printf("======================");
+    
+    // Pequeno tutorial rápido embaixo
+    setColor(8); // Cinza
+    gotoxy(sideX, startY + 10);
+    printf("Use WASD ou Setas");
 }
 
 /* colisão */
@@ -281,7 +317,7 @@ void input(){
 
 void update_level(){
 
-    if(score>=30 && level==1){
+    if(score>=1000 && level==1){
 
         level=2;
 
@@ -293,7 +329,7 @@ void update_level(){
         init_fruits();
     }
 
-    if(score>=60 && level==2){
+    if(score>=3000 && level==2){
 
         level=3;
 
@@ -336,7 +372,7 @@ void update(){
 
         if(newX==fruits[i].x && newY==fruits[i].y){
 
-            score+=10;
+            score+=15;
             generate_fruit(i);
             ate=1;
         }
